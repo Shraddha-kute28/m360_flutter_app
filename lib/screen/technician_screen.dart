@@ -33,7 +33,12 @@ class _TechnicianScreenState extends State<TechnicianScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop:() async{
+        return false;
+      },
+
+      child:Scaffold(
       appBar: _buildAppBar(),
       body: SafeArea(
         child: _pages[_selectedIndex],
@@ -58,6 +63,7 @@ class _TechnicianScreenState extends State<TechnicianScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 
@@ -71,7 +77,7 @@ class _TechnicianScreenState extends State<TechnicianScreen> {
         centerTitle: false,
         title: Image.asset(
           'images/appBarIcon.png',
-          height: 48,
+          height: 37,
           fit: BoxFit.contain,
         ),
       );

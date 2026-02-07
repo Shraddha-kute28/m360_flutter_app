@@ -57,23 +57,42 @@ class _InitiatePTWScreenState extends State<InitiatePTWScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E88E5),
         elevation: 0,
-        centerTitle: true,
+        automaticallyImplyLeading: false,
 
-        /// 🔹 LEFT → APP ICON
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 12),
-          child: Image.asset(
-            'images/appBarIcon.png',
-            height: 36,
-            fit: BoxFit.contain,
-          ),
-        ),
+        title: SizedBox(
+          width: double.infinity,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              /// 🔹 LEFT LOGO
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Image.asset(
+                  'images/appBarIcon.png',
+                  height: 37,
+                  fit: BoxFit.contain,
+                ),
+              ),
 
-        title: const Text(
-          'Initiate PTW',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
+              /// 🔹 CENTER TITLE (TRUE CENTER)
+              const Text(
+                'Initiate PTW',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
+              ),
+
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+            ],
           ),
         ),
       ),

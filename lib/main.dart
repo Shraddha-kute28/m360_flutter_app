@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:m_360/screen/login_screen.dart';
-import 'package:m_360/screen/splash_screen.dart';
+import 'package:M360/screen/login_screen.dart';
+import 'package:M360/screen/splash_screen.dart';
 
 
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'M-360',
+      title: 'M360',
       routes: {
         '/': (context) => const SplashScreen(),
         '/login':(_)=> const LoginScreen(),

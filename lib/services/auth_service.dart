@@ -43,6 +43,6 @@ class AuthService {
   /// 🚪 LOGOUT
   static Future<void> logout() async {
     // optional backend logout API
-    await TokenStorage.clear(); // ✅ clear everything
+    await TokenStorage.clear();
   }
 }

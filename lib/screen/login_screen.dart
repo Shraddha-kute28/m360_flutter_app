@@ -6,6 +6,7 @@ import '../core/token_storage.dart';
 import 'admin_screen.dart';
 import 'technician_screen.dart';
 
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -26,8 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
       errorMessage = null;
       isLoading = true;
     });
-
-    print('TOKEN BEFORE LOGIN: ${await TokenStorage.getToken()}');
 
     final username = usernameController.text.trim();
     final password = passwordController.text.trim();
@@ -84,10 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: const AssetImage('images/trial1.jpg'),
+                image: const AssetImage('images/qq.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.9),
+                  Colors.white.withOpacity(0.5),
                   BlendMode.lighten,
                 ),
               ),

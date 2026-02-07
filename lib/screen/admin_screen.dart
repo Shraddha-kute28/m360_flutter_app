@@ -41,7 +41,12 @@ class _AdminScreenState extends State<AdminScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop:() async{
+        return false;
+      },
+
+      child:Scaffold(
       appBar: _buildAppBar(),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -62,7 +67,9 @@ class _AdminScreenState extends State<AdminScreen> {
               icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
+    ),
     );
+
   }
 
   /// ================= APP BAR =================
@@ -74,7 +81,7 @@ class _AdminScreenState extends State<AdminScreen> {
         elevation: 0,
         title: Image.asset(
           'images/appBarIcon.png',
-          height: 48,
+          height: 37,
           fit: BoxFit.contain,
         ),
       );
@@ -84,6 +91,7 @@ class _AdminScreenState extends State<AdminScreen> {
     return M360AppBar(title: _titles[_selectedIndex]);
   }
 }
+
 
 /// ================= HOME TAB =================
 class AdminHomeTab extends StatelessWidget {
