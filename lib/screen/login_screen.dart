@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../services/auth_service.dart';
 import '../core/token_storage.dart';
+import '../widgets/animated_brand_text.dart';
 import 'admin_screen.dart';
 import 'technician_screen.dart';
 
@@ -83,10 +84,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: const AssetImage('images/qq.jpg'),
+                image: const AssetImage('images/trial.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.5),
+                  Colors.white.withOpacity(0.6),
                   BlendMode.lighten,
                 ),
               ),
@@ -101,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   24,
                   24,
                   24,
-                  MediaQuery.of(context).viewInsets.bottom + 60, // ✅ KEYBOARD SPACE
+                  MediaQuery.of(context).viewInsets.bottom + 200,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -109,13 +110,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     Image.asset('images/logo.png', height: 100),
                     const SizedBox(height: 12),
 
-                    Text(
-                      "Maintenance 360",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
+                    // Text(
+                    //   "Maintenance 360",
+                    //   style: GoogleFonts.poppins(
+                    //     fontSize: 16,
+                    //     color: Colors.grey.shade600, // your app blue
+                    //     letterSpacing: 0.8,
+                    //   ),
+                    // ),
+                    const AnimatedBrandText(),
+
 
                     const SizedBox(height: 32),
 
