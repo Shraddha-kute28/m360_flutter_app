@@ -7,7 +7,6 @@ import '../widgets/animated_brand_text.dart';
 import 'admin_screen.dart';
 import 'technician_screen.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -74,13 +73,16 @@ class _LoginScreenState extends State<LoginScreen> {
     final bool isKeyboardOpen =
         MediaQuery.of(context).viewInsets.bottom != 0;
 
+    // Responsive card width (IMPORTANT FIX)
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = screenWidth > 600 ? 420.0 : screenWidth * 0.9;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       resizeToAvoidBottomInset: true,
-
       body: Stack(
         children: [
-          /// 🔹 BACKGROUND
+          /// BACKGROUND
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -94,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
 
-          /// 🔹 MAIN CONTENT
+          /// MAIN CONTENT
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -109,152 +111,135 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Image.asset('images/logo.png', height: 100),
                     const SizedBox(height: 12),
-
-                    // Text(
-                    //   "Maintenance 360",
-                    //   style: GoogleFonts.poppins(
-                    //     fontSize: 16,
-                    //     color: Colors.grey.shade600, // your app blue
-                    //     letterSpacing: 0.8,
-                    //   ),
-                    // ),
                     const AnimatedBrandText(),
-
-
                     const SizedBox(height: 32),
 
-                    /// 🔹 LOGIN CARD
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 20,
-                            offset: Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Login",
-                            style: GoogleFonts.poppins(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF263238),
+                    /// LOGIN CARD
+                    SizedBox(
+                      width: cardWidth,
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 20,
+                              offset: Offset(0, 10),
                             ),
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          /// USERNAME
-                          TextField(
-                            controller: usernameController,
-                            decoration: InputDecoration(
-                              labelText: "Username",
-                              prefixIcon: const Icon(
-                                Icons.person_outline,
-                                color: Color(0xFF1E88E5),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Login",
+                              style: GoogleFonts.poppins(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF263238),
                               ),
                             ),
-                          ),
+                            const SizedBox(height: 20),
 
-                          const SizedBox(height: 16),
-
-                          /// PASSWORD
-                          TextField(
-                            controller: passwordController,
-                            obscureText: isPasswordHidden,
-                            decoration: InputDecoration(
-                              labelText: "Password",
-                              prefixIcon: const Icon(
-                                Icons.lock_outline,
-                                color: Color(0xFF1E88E5),
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  isPasswordHidden
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
+                            TextField(
+                              controller: usernameController,
+                              decoration: InputDecoration(
+                                labelText: "Username",
+                                prefixIcon: const Icon(
+                                  Icons.person_outline,
+                                  color: Color(0xFF1E88E5),
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    isPasswordHidden = !isPasswordHidden;
-                                  });
-                                },
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {},
-                              child: const Text("Forgot Password?"),
-                            ),
-                          ),
-
-                          /// ERROR MESSAGE
-                          if (errorMessage != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Text(
-                                errorMessage!,
-                                style: GoogleFonts.poppins(
-                                  color: Colors.red,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-
-                          /// LOGIN BUTTON
-
-
-                          SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                const Color(0xFF1E88E5),
-                                foregroundColor: Colors.white,
-                                textStyle:const TextStyle(
-                                fontSize:16,
-                                fontWeight:FontWeight.bold,
-                                ),
-                                shape: RoundedRectangleBorder(
+                                border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-
-                              onPressed: isLoading ? null : _handleLogin,
-                              child: isLoading
-                                  ? const SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                                  : const Text("Login"),
                             ),
-                          ),
 
-                          const SizedBox(height: 16),
-                        ],
+                            const SizedBox(height: 16),
+
+                            TextField(
+                              controller: passwordController,
+                              obscureText: isPasswordHidden,
+                              decoration: InputDecoration(
+                                labelText: "Password",
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline,
+                                  color: Color(0xFF1E88E5),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    isPasswordHidden
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isPasswordHidden = !isPasswordHidden;
+                                    });
+                                  },
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () {},
+                                child: const Text("Forgot Password?"),
+                              ),
+                            ),
+
+                            if (errorMessage != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text(
+                                  errorMessage!,
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+
+                            SizedBox(
+                              width: double.infinity,
+                              height: 52,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                  const Color(0xFF1E88E5),
+                                  foregroundColor: Colors.white,
+                                  textStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: isLoading ? null : _handleLogin,
+                                child: isLoading
+                                    ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                                    : const Text("Login"),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -263,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
 
-          /// 🔹 FOOTER
+          /// FOOTER
           if (!isKeyboardOpen)
             Align(
               alignment: Alignment.bottomCenter,
