@@ -42,7 +42,6 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
     });
   }
 
-  // ================= STATUS PARSER =================
   TicketStatus _parseStatus(String? status) {
     switch (status) {
       case 'Open':
@@ -66,7 +65,6 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
     }
   }
 
-  // ================= FILTER =================
   List<Map<String, dynamic>> _filterTickets(List<Map<String, dynamic>> tickets) {
     return tickets.where((t) {
       final statusMatch =
@@ -86,7 +84,6 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
     }).toList();
   }
 
-  // ================= ACTION HANDLER =================
   Future<void> _handleTicketAction({
     required int ticketId,
     required TicketStatus status,
@@ -129,7 +126,6 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
     }
   }
 
-  // ================= HISTORY =================
   Future<void> _showHistory(
       BuildContext context, {
         required int ticketId,
@@ -138,55 +134,59 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
     final history = await TicketService.getTicketHistory(ticketId);
     if (!mounted) return;
 
+    final width = MediaQuery.of(context).size.width;
+    final isTablet = width > 600;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (_) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.75,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 8, 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Ticket History',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+      builder: (ctx) {
+        return MediaQuery.removePadding(
+          context: ctx,
+          removeLeft: true,
+          removeRight: true,
+          child: Container(
+            width: isTablet ? width * 0.98 : width, // nearly full width on tablet
+            height: MediaQuery.of(context).size.height * 0.75,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 8, 10),
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Ticket History',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const Divider(height: 1),
-              Expanded(child: _HistoryDataTable(history: history)),
-            ],
+                const Divider(height: 1),
+                Expanded(child: _HistoryDataTable(history: history)),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  // ================= UI =================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -279,33 +279,33 @@ class _TicketCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-
-                  child:Column(
-                     crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                    '${t['eventCode'] ?? ''}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                        '${t['eventCode'] ?? ''}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        t['machineName'] ?? '--',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
                   ),
-
-                  const SizedBox(height:4),
-                   Text(
-                     t['machineName'] ?? '--',
-                    maxLines:1,
-                    overflow:TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize:13,color: Colors.black54,
-                    ),
-                   ),
+                ),
+                _StatusChip(statusEnum),
               ],
-            ),
-      ),
-            _StatusChip(statusEnum),
-            ],
             ),
             const SizedBox(height: 10),
             Row(
@@ -351,7 +351,7 @@ class _TicketCard extends StatelessWidget {
   }
 }
 
-/// ================= STATUS CHIP =================
+/// STATUS CHIP
 class _StatusChip extends StatelessWidget {
   final TicketStatus status;
   const _StatusChip(this.status);
@@ -375,7 +375,7 @@ class _StatusChip extends StatelessWidget {
   }
 }
 
-/// ================= HISTORY TABLE =================
+/// HISTORY TABLE
 class _HistoryDataTable extends StatelessWidget {
   final List<Map<String, dynamic>> history;
   const _HistoryDataTable({required this.history});
@@ -405,58 +405,64 @@ class _HistoryDataTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        headingRowColor:
-        MaterialStateProperty.all(Colors.blueAccent.shade100),
-        columns: const [
-          DataColumn(label: Text('Date')),
-          DataColumn(label: Text('Status')),
-          DataColumn(label: Text('Action By')),
-          DataColumn(label: Text('Comment')),
-        ],
-        rows: history.map((h) {
-          final statusEnum = _parseHistoryStatus(h['status']);
-          return DataRow(cells: [
-            DataCell(Text(formatDate(h['actionDate']))),
-            DataCell(
-              Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: statusEnum.color.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  statusEnum.displayText,
-                  style: TextStyle(
-                    color: statusEnum.color,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: DataTable(
+              headingRowColor:
+              MaterialStateProperty.all(Colors.blueAccent.shade100),
+              columns: const [
+                DataColumn(label: Text('Date')),
+                DataColumn(label: Text('Status')),
+                DataColumn(label: Text('Action By')),
+                DataColumn(label: Text('Comment')),
+              ],
+              rows: history.map((h) {
+                final statusEnum = _parseHistoryStatus(h['status']);
+                return DataRow(cells: [
+                  DataCell(Text(formatDate(h['actionDate']))),
+                  DataCell(
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: statusEnum.color.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        statusEnum.displayText,
+                        style: TextStyle(
+                          color: statusEnum.color,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                  DataCell(Text(h['actionByName'] ?? '--')),
+                  DataCell(
+                    SizedBox(
+                      width: 260,
+                      child: Text(
+                        h['actionComment'] ?? '',
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ]);
+              }).toList(),
             ),
-            DataCell(Text(h['actionByName'] ?? '--')),
-            DataCell(
-              SizedBox(
-                width: 260,
-                child: Text(
-                  h['actionComment'] ?? '',
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-          ]);
-        }).toList(),
-      ),
+          ),
+        );
+      },
     );
   }
 }
 
-// ================= FORMATTERS =================
 String formatDate(dynamic date) {
   if (date == null) return '--';
   final d = date.toString();

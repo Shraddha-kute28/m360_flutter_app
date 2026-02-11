@@ -163,7 +163,6 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: Card(
-            /// ✅ SAME CARD STYLE AS PTC
             elevation: 5,
             shadowColor: Colors.black12,
             shape: RoundedRectangleBorder(
@@ -234,7 +233,6 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                       padding:
                       const EdgeInsets.symmetric(vertical: 18),
                       decoration: BoxDecoration(
-                        /// ✅ NEUTRAL (PTC STYLE)
                         color: const Color(0xFFF5F5F5),
                         borderRadius: BorderRadius.circular(14),
                         border:

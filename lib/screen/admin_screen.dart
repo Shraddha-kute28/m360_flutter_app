@@ -7,6 +7,7 @@ import 'ptc_screen.dart';
 import 'profile_tab.dart';
 import '../widgets/m360_app_bar.dart';
 import '../widgets/action_card.dart';
+import 'package:flutter/services.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -18,63 +19,82 @@ class AdminScreen extends StatefulWidget {
 class _AdminScreenState extends State<AdminScreen> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _applyOrientationForTab(_selectedIndex);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+    super.dispose();
+  }
+
   /// 🔑 ORDER MUST MATCH BOTTOM NAV
   final List<Widget> _pages = const [
-    AdminHomeTab(),       // 0
-    AllTicketsScreen(),   // 1
-    PtwScreen(),          // 2
-    PTCScreen(),          // 3
-    ProfileTab(),         // 4
+    AdminHomeTab(),
+    AllTicketsScreen(),
+    PtwScreen(),
+    PTCScreen(),
+    ProfileTab(),
   ];
 
   final List<String> _titles = [
-    '',             // Home (logo only)
+    '',
     'All Tickets',
     'Permission To Work',
     'Permission To Close',
     'Profile',
   ];
 
-  void _setTab(int index) {
-    setState(() => _selectedIndex = index);
+  /// -------- FIXED: Orientation function placed OUTSIDE _setTab ----------
+  Future<void> _applyOrientationForTab(int index) async {
+    if (index == 0) {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    } else {
+      await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+    }
+  }
+
+  void _setTab(int index) async {
+    await _applyOrientationForTab(index);
+
+    if (mounted) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop:() async{
-        return false;
-      },
-
-      child:Scaffold(
-      appBar: _buildAppBar(),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _setTab,
-        selectedItemColor: const Color(0xFF1E88E5),
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.confirmation_number), label: 'Tickets'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.assignment), label: 'PTW'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.groups), label: 'PTC'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: 'Profile'),
-        ],
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _setTab,
+          selectedItemColor: const Color(0xFF1E88E5),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.confirmation_number), label: 'Tickets'),
+            BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'PTW'),
+            BottomNavigationBarItem(icon: Icon(Icons.groups), label: 'PTC'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          ],
+        ),
       ),
-    ),
     );
-
   }
 
-  /// ================= APP BAR =================
   PreferredSizeWidget _buildAppBar() {
-    /// 🏠 HOME → ONLY LOGO
     if (_selectedIndex == 0) {
       return AppBar(
         backgroundColor: const Color(0xFF1E88E5),
@@ -87,13 +107,12 @@ class _AdminScreenState extends State<AdminScreen> {
       );
     }
 
-    /// 📄 OTHER SCREENS → LOGO + TITLE
     return M360AppBar(title: _titles[_selectedIndex]);
   }
 }
 
-
 /// ================= HOME TAB =================
+
 class AdminHomeTab extends StatelessWidget {
   const AdminHomeTab({super.key});
 
